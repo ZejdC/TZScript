@@ -13,7 +13,11 @@ TOPICRMBCLICK = "tzmouse/RMBClick/"+platform.node()
 TOPICSCROLLUP = "tzmouse/ScrollUp/"+platform.node()
 TOPICSCROLLDW = "tzmouse/ScrollDown/"+platform.node()
 
-duration = 1.
+ubrzavajx = 0
+ubrzavajy = 0
+treshold = 0.15
+
+duration = 1
 press = False
 coefx = 1*GetSystemMetrics(0)/3
 coefy = 1*GetSystemMetrics(1)/9
@@ -36,14 +40,33 @@ def funkcijatrenja():
     global yvelocity
     global pozitivnoY
     global pozitivnoX
+    global ubrzavajx
+    global ubrzavajy
 
     global greskax
     global greskay
     while True:
+        if xvelocity>treshold:
+            ubrzavajx = 1
+        elif xvelocity<-treshold:
+            ubrzavajx = -1
+        else:
+            ubrzavajx = 0
+        if yvelocity>treshold:
+            ubrzavajy = 1
+        elif yvelocity<-treshold:
+            ubrzavajy = -1
+        else:
+            ubrzavajy=0
         xvelocity = xvelocity/trenjekoef
         yvelocity = yvelocity/trenjekoef
-        print(xvelocity.__round__(2).__str__()+ " "+ yvelocity.__round__(2).__str__())
+
+        #print(xvelocity.__round__(2).__str__())
+        #print("X:"+ubrzavajx.__str__()+"Y:"+ubrzavajy.__str__())
+        #print(xvelocity.__round__(2).__str__()+ " "+ yvelocity.__round__(2).__str__())
         #print(greskax.__str__()+" "+greskay.__str__())
+
+
         t.sleep(0.2)
 def velocityx(acceleration):
     global  xvelocity
@@ -69,17 +92,23 @@ def moveCursor(x, y, abs):
     global greskax
     global greskay
 
+
+    movex = 0.
+    movey = 0.
+
+    if ubrzavajx==0 or (ubrzavajx==1 and x > 0) or (ubrzavajx==-1 and x < 0):
+        movex = giveDistanceX(x)
+    if ubrzavajy==0 or (ubrzavajy==1 and y > 0) or (ubrzavajy==-1 and y < 0):
+        movey = giveDistanceY(y)
     greskax = greskax+x
     greskay = greskay+y
 
-    movex = giveDistanceX(x)
-    movey = giveDistanceY(y)
-
-    # print("(["+xvelocity.__round__(2).__str__()+","+yvelocity.__round__(2).__str__()+"],["+x.__round__(2).__str__()+","+
-    #       y.__round__(2).__str__()+"]) -> ("+movex.__str__()+","+movey.__str__()+")")
-
     xvelocity = velocityx(x)
     yvelocity = velocityy(y)
+
+    # print("([" + xvelocity.__round__(2).__str__() + "," + yvelocity.__round__(2).__str__() + "],[" + x.__round__(2).__str__() + "," +
+    #       y.__round__(2).__str__() + "]) -> (" + movex.__str__() + "," + movey.__str__() + ")")
+
     m.move(movex, movey, abs,0.2)
 
 
@@ -100,8 +129,8 @@ def on_message(client, userdata, msg):
     #print(poruka +" " + msg.topic)
     if msg.topic == TOPICMOVEMENT:
         niz = poruka.split(",")
-        accx = float(niz[0])
-        accy = -float(niz[1])
+        accx = -float(niz[0])
+        accy = float(niz[1])
         if accx>maksx:
             maksx=accx
         if accy>maksy:
@@ -109,6 +138,7 @@ def on_message(client, userdata, msg):
         with open('data.txt', 'a') as the_file:
             the_file.write(brojac.__str__()+"\t"+accx.__str__()+"\t"+accy.__str__()+"\n")
         brojac = brojac + 1
+        print(accx.__str__()+"\t"+accy.__str__())
         moveCursor(accx,accy,False)
     elif msg.topic == TOPICLMBCLICK:
         m.click()
