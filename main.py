@@ -15,17 +15,17 @@ TOPICSCROLLDW = "tzmouse/ScrollDown/"+platform.node()
 
 ubrzavajx = 0
 ubrzavajy = 0
-treshold = 0.15
+treshold = 0.01
 
 duration = 1
 press = False
-coefx = 1*GetSystemMetrics(0)/3
-coefy = 1*GetSystemMetrics(1)/9
+coefx = 1*GetSystemMetrics(0)/2
+coefy = 1*GetSystemMetrics(1)/5
 xvelocity = 0.
 yvelocity = 0.
 maksx=0.
 maksy=0.
-trenjekoef = 10
+trenjekoef = 7
 pozitivnoX = 0
 pozitivnoY = 0
 
