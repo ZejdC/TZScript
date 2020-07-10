@@ -21,7 +21,7 @@ xvelocity = 0.
 yvelocity = 0.
 maksx=0.
 maksy=0.
-trenjekoef = 5
+trenjekoef = 10
 pozitivnoX = 0
 pozitivnoY = 0
 
@@ -42,8 +42,8 @@ def funkcijatrenja():
     while True:
         xvelocity = xvelocity/trenjekoef
         yvelocity = yvelocity/trenjekoef
-        #print(xvelocity.__round__(2).__str__()+ " "+ yvelocity.__round__(2).__str__())
-        print(greskax.__str__()+" "+greskay.__str__())
+        print(xvelocity.__round__(2).__str__()+ " "+ yvelocity.__round__(2).__str__())
+        #print(greskax.__str__()+" "+greskay.__str__())
         t.sleep(0.2)
 def velocityx(acceleration):
     global  xvelocity
