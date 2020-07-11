@@ -150,21 +150,11 @@ def on_message(client, userdata, msg):
     poruka = msg.payload.decode()
     print(poruka +" " + msg.topic)
     if msg.topic == TOPICMOVEMENT:
-        primio = True
-        if ignorisi:
-            return
         niz = poruka.split(",")
-        accx = -float(niz[0])
-        accy = float(niz[1])
-        if accx>maksx:
-            maksx=accx
-        if accy>maksy:
-            maksy=accy
-        with open('data.txt', 'a') as the_file:
-            the_file.write(brojac.__str__()+"\t"+accx.__str__()+"\t"+accy.__str__()+"\n")
-        brojac = brojac + 1
+        x = -float(niz[0])
+        y = float(niz[1])
         #print(accx.__str__()+"\t"+accy.__str__())
-        moveCursor(accx,accy,False)
+        m.move(x,y,True, 0.2)
     elif msg.topic == TOPICLMBCLICK:
         m.click()
     elif msg.topic == TOPICRMBCLICK:
