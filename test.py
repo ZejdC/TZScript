@@ -151,8 +151,8 @@ def on_message(client, userdata, msg):
     print(poruka +" " + msg.topic)
     if msg.topic == TOPICMOVEMENT:
         niz = poruka.split(",")
-        x = -float(niz[0])
-        y = float(niz[1])
+        x = float(niz[0])
+        y = -float(niz[1])
         #print(accx.__str__()+"\t"+accy.__str__())
         m.move(x,y,True, 0.2)
     elif msg.topic == TOPICLMBCLICK:
