@@ -15,7 +15,9 @@ TOPICSCROLLDW = "tzmouse/ScrollDown/"+platform.node()
 
 ubrzavajx = 0
 ubrzavajy = 0
-treshold = 0.01
+treshold = 0.001
+primio = True
+ignorisi = True
 
 duration = 1
 press = False
@@ -25,7 +27,7 @@ xvelocity = 0.
 yvelocity = 0.
 maksx=0.
 maksy=0.
-trenjekoef = 7
+trenjekoef = 5
 pozitivnoX = 0
 pozitivnoY = 0
 
@@ -35,6 +37,15 @@ greskay = 0.
 tracker = open("data.txt","w")
 brojac = 0
 
+def provjeraprvaporuka():
+    global primio
+    global ignorisi
+
+    while True:
+
+        t.sleep(0.3)
+
+
 def funkcijatrenja():
     global xvelocity
     global yvelocity
@@ -42,6 +53,7 @@ def funkcijatrenja():
     global pozitivnoX
     global ubrzavajx
     global ubrzavajy
+    global ignorisi
 
     global greskax
     global greskay
@@ -58,6 +70,11 @@ def funkcijatrenja():
             ubrzavajy = -1
         else:
             ubrzavajy=0
+
+        if ubrzavajy==0 and ubrzavajx==0:
+            ignorisi = False
+        else:
+            ignorisi = False
         xvelocity = xvelocity/trenjekoef
         yvelocity = yvelocity/trenjekoef
 
@@ -92,6 +109,8 @@ def moveCursor(x, y, abs):
     global greskax
     global greskay
 
+    global primio
+
 
     movex = 0.
     movey = 0.
@@ -125,9 +144,15 @@ def on_message(client, userdata, msg):
     global brojac
     global tracker
     global press
+    global ignorisi
+
+    global primio
     poruka = msg.payload.decode()
     #print(poruka +" " + msg.topic)
     if msg.topic == TOPICMOVEMENT:
+        primio = True
+        if ignorisi:
+            return
         niz = poruka.split(",")
         accx = -float(niz[0])
         accy = float(niz[1])
@@ -157,6 +182,7 @@ def on_message(client, userdata, msg):
         m.wheel(1)
     elif msg.topic == TOPICSCROLLDW:
         m.wheel(-1)
+    primio = False
 
 def on_disconnect():
     print(maksx)
@@ -164,6 +190,10 @@ def on_disconnect():
 
 trenje_nit = threading.Thread(target=funkcijatrenja)
 trenje_nit.start()
+
+primljena_nit = threading.Thread(target=provjeraprvaporuka)
+#primljena_nit.start()
+
 client = mqtt.Client()
 client.connect("broker.hivemq.com",1883,60)
 
