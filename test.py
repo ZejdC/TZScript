@@ -17,7 +17,6 @@ ubrzavajx = 0
 ubrzavajy = 0
 treshold = 0.001
 primio = True
-ignorisi = True
 
 duration = 1
 press = False
@@ -31,10 +30,6 @@ trenjekoef = 5
 pozitivnoX = 0
 pozitivnoY = 0
 
-greskax = 0.
-greskay = 0.
-
-tracker = open("data.txt","w")
 brojac = 0
 
 def provjeraprvaporuka():
@@ -54,9 +49,6 @@ def funkcijatrenja():
     global ubrzavajx
     global ubrzavajy
     global ignorisi
-
-    global greskax
-    global greskay
     while True:
         if xvelocity>treshold:
             ubrzavajx = 1
@@ -106,9 +98,6 @@ def moveCursor(x, y, abs):
     global pozitivnoY
     global pozitivnoX
 
-    global greskax
-    global greskay
-
     global primio
 
 
@@ -119,8 +108,6 @@ def moveCursor(x, y, abs):
         movex = giveDistanceX(x)
     if ubrzavajy==0 or (ubrzavajy==1 and y > 0) or (ubrzavajy==-1 and y < 0):
         movey = giveDistanceY(y)
-    greskax = greskax+x
-    greskay = greskay+y
 
     xvelocity = velocityx(x)
     yvelocity = velocityy(y)
@@ -138,23 +125,23 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe(string)
     print("Subsribed on "+string)
 
+metertopixelratio=3779.52755905
+
 def on_message(client, userdata, msg):
     global maksy
     global maksx
     global brojac
-    global tracker
     global press
-    global ignorisi
 
     global primio
     poruka = msg.payload.decode()
-    print(poruka +" " + msg.topic)
+    #print(poruka +" " + msg.topic)
     if msg.topic == TOPICMOVEMENT:
         niz = poruka.split(",")
-        x = float(niz[0])
-        y = -float(niz[1])
-        #print(accx.__str__()+"\t"+accy.__str__())
-        m.move(x,y,True, 0.2)
+        x = float(niz[0])*metertopixelratio
+        y = 0
+        print(x.__str__()+" "+y.__str__())
+        m.move(x,y,False)
     elif msg.topic == TOPICLMBCLICK:
         m.click()
     elif msg.topic == TOPICRMBCLICK:
