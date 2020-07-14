@@ -3,13 +3,13 @@ import platform
 from win32api import GetSystemMetrics
 import paho.mqtt.client as mqtt
 
-TOPICMOVEMENT = "tzmouse/"+platform.node()
-TOPICLMBPRESS = "tzmouse/LMBPress/"+platform.node()
-TOPICRMBPRESS = "tzmouse/RMBPress/"+platform.node()
-TOPICLMBCLICK = "tzmouse/LMBClick/"+platform.node()
-TOPICRMBCLICK = "tzmouse/RMBClick/"+platform.node()
-TOPICSCROLLUP = "tzmouse/ScrollUp/"+platform.node()
-TOPICSCROLLDW = "tzmouse/ScrollDown/"+platform.node()
+TOPICMOVEMENT = "tzmouse/"+platform.node()+"/Move"
+TOPICLMBPRESS = "tzmouse/"+platform.node()+"/LMBPress"
+TOPICRMBPRESS = "tzmouse/"+platform.node()+"/RMBPress"
+TOPICLMBCLICK = "tzmouse/"+platform.node()+"/LMBClick"
+TOPICRMBCLICK = "tzmouse/"+platform.node()+"/RMBClick"
+TOPICSCROLLUP = "tzmouse/"+platform.node()+"/ScrollUp"
+TOPICSCROLLDW = "tzmouse/"+platform.node()+"/ScrollDown"
 
 duration = 1
 press = False
@@ -41,7 +41,7 @@ def moveCursor(x, y, abs):
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
-    string = "tzmouse/#"
+    string = "tzmouse/"+platform.node()+"/#"
     client.subscribe(string)
     print("Subsribed on "+string)
 
